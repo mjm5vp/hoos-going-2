@@ -42,20 +42,20 @@ import SentToMeScreen from './src/screens/SentToMeScreen'
 // ];
 
 let RootStack = createStackNavigator({
-  home: HomeScreen
-  // input: InputScreen
-  // map_select: { screen: MapSelectScreen },
-  // log: { screen: LogScreen },
-  // map: { screen: MapScreen },
-  // select: { screen: PooSelect },
-  // stats: StatsScreen
-  // settings: { screen: SettingsScreen },
-  // auth: { screen: AuthScreen },
-  // friends: { screen: FriendsScreen },
-  // add_friends: { screen: AddFriendsScreen },
-  // send_to_friends: { screen: SendToFriendsScreen },
-  // sent_to_me: { screen: SentToMeScreen },
-  // profile: { screen: ProfileScreen }
+  home: HomeScreen,
+  input: InputScreen,
+  map_select: MapSelectScreen,
+  log: LogScreen,
+  map: MapScreen,
+  select: PooSelect,
+  stats: StatsScreen,
+  settings: SettingsScreen,
+  auth: AuthScreen,
+  friends: FriendsScreen,
+  add_friends: AddFriendsScreen,
+  send_to_friends: SendToFriendsScreen,
+  sent_to_me: SentToMeScreen,
+  profile: ProfileScreen
 })
 
 let Navigation = createAppContainer(RootStack)

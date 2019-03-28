@@ -81,10 +81,6 @@ export default class App extends React.Component {
     notification: {}
   }
 
-  componentWillMount() {
-    this.loadAssetsAsync()
-  }
-
   async loadAssetsAsync() {
     const poos = allPoos.map(poo => poo.image)
     const imageAssets = cacheImages([
@@ -101,6 +97,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    this.loadAssetsAsync()
     const config = {
       apiKey: 'AIzaSyAB6ioNX2EZn0Z8exCVMoLZeWpFswluVyM',
       authDomain: 'one-time-password-698fc.firebaseapp.com',

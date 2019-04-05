@@ -42,9 +42,8 @@ class FriendsList extends Component {
     const myFriendsList = myFriends.map((friend, i) => {
       const { name, number } = friend
       return (
-        <View>
+        <View key={i}>
           <TouchableOpacity
-            key={i}
             onPress={() => this.editContactInfo(name, number, i)}
           >
             <View style={styles.friendView}>

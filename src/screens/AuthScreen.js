@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ActivityIndicator, Keyboard } from 'react-native'
-import { FormLabel, FormInput, Button } from 'react-native-elements'
+import { Input, Button } from 'react-native-elements'
 import axios from 'axios'
 import firebase from 'firebase'
 import { connect } from 'react-redux'
@@ -14,7 +14,7 @@ import {
 const ROOT_URL =
   'https://us-central1-one-time-password-698fc.cloudfunctions.net'
 
-class SignUpForm extends Component {
+class AuthScreen extends Component {
   state = {
     name: '',
     phone: '',
@@ -162,12 +162,18 @@ class SignUpForm extends Component {
       return (
         <View>
           <View style={{ marginBottom: 10 }}>
-            <FormLabel>Enter your name:</FormLabel>
+            <Input
+              placeholder="Enter your name:"
+              value={this.state.name}
+              keyboardType="default"
+              onChangeText={name => this.setState({ name })}
+            />
+            {/* <FormLabel>Enter your name:</FormLabel>
             <FormInput
               value={this.state.name}
               onChangeText={name => this.setState({ name })}
               keyboardType="default"
-            />
+            /> */}
           </View>
           <Button title="Submit" onPress={this.handleNameSubmit} />
         </View>
@@ -178,12 +184,18 @@ class SignUpForm extends Component {
       return (
         <View>
           <View style={{ marginBottom: 10 }}>
-            <FormLabel>Enter your phone number:</FormLabel>
-            <FormInput
+            <Input
+              placeholder="Enter your phone number"
               value={this.state.phone}
               onChangeText={phone => this.setState({ phone })}
               keyboardType="number-pad"
             />
+            {/* <FormLabel>Enter your phone number:</FormLabel>
+            <FormInput
+              value={this.state.phone}
+              onChangeText={phone => this.setState({ phone })}
+              keyboardType="number-pad"
+            /> */}
           </View>
           <Button title="Submit" onPress={this.handleSubmit} />
         </View>
@@ -193,12 +205,18 @@ class SignUpForm extends Component {
     return (
       <View>
         <View style={{ marginBottom: 10 }}>
-          <FormLabel>Enter code:</FormLabel>
-          <FormInput
+          <Input
+            placeholder="Enter code"
             value={this.state.code}
             onChangeText={code => this.setState({ code })}
             keyboardType="number-pad"
           />
+          {/* <FormLabel>Enter code:</FormLabel>
+        <FormInput
+            value={this.state.code}
+            onChangeText={code => this.setState({ code })}
+            keyboardType="number-pad"
+          /> */}
         </View>
 
         <Button title="Submit" onPress={this.signIn} />
@@ -265,4 +283,4 @@ export default connect(
     editMyInfo,
     setNotificationToken
   }
-)(SignUpForm)
+)(AuthScreen)

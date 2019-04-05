@@ -1,20 +1,18 @@
-import Expo from 'expo'
+import { Contacts } from 'expo'
 import _ from 'lodash'
 import firebase from 'firebase'
 
 export const getContactsAsync = async () => {
   let contacts = []
   try {
-    contacts = await Expo.Contacts.getContactsAsync({
-      fields: [Expo.Contacts.PHONE_NUMBERS],
-      pageSize: 10000,
-      pageOffset: 0
+    contacts = await Contacts.getContactsAsync({
+      fields: [Contacts.PHONE_NUMBERS]
     })
   } catch (e) {
     console.error(e)
     console.error('could not get contacts')
   }
-
+  console.log(formatContacts(contacts).length)
   return formatContacts(contacts)
 }
 
@@ -37,20 +35,23 @@ export const getUsersNumbers = async () => {
 export const formatContacts = contacts => {
   let contactsNamesAndNumbers = []
 
-  contacts.data.filter(contact => contact.phoneNumbers[0]).forEach(contact =>
-    contact.phoneNumbers.forEach(phoneNumber => {
-      const { name } = contact
-      const number = formatPhone(phoneNumber.number)
-      if (
-        number.length === 10
-        // !_.some(this.props.myFriends, ['number', number])
-      ) {
-        contactsNamesAndNumbers.push({ name, number })
-      }
-    })
-  )
+  contacts.data
+    .filter(contact => contact.phoneNumbers[0])
+    .forEach(contact =>
+      contact.phoneNumbers.forEach(phoneNumber => {
+        const { name } = contact
+        const number = formatPhone(phoneNumber.number)
+        if (
+          number.length === 10
+          // !_.some(this.props.myFriends, ['number', number])
+        ) {
+          contactsNamesAndNumbers.push({ name, number })
+        }
+      })
+    )
 
   contactsNamesAndNumbers = _.uniqWith(contactsNamesAndNumbers, _.isEqual)
+  console.log(contactsNamesAndNumbers)
   return _.sortBy(contactsNamesAndNumbers, contact => contact.name)
 }
 

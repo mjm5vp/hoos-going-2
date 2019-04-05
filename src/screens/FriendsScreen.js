@@ -41,7 +41,7 @@ class FriendsScreen extends Component {
     id: ''
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { currentUser } = firebase.auth()
     const { myFriends } = this.props
     // registerForPushNotificationsAsync();
@@ -54,23 +54,17 @@ class FriendsScreen extends Component {
     this.setState({ currentUser, myFriends: sortedFriends })
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      myFriends: nextProps.myFriends
-    })
-  }
-
-  askContactsPermission = async () => {
-    // Ask for permission to query contacts.
-    const permission = await Expo.Permissions.askAsync(
-      Expo.Permissions.CONTACTS
-    )
-    if (permission.status !== 'granted') {
-      // Permission was denied...
-      this.setState({ loading: false, contactPermissionDenied: true })
-      return
-    }
-  }
+  // askContactsPermission = async () => {
+  //   // Ask for permission to query contacts.
+  //   const permission = await Expo.Permissions.askAsync(
+  //     Expo.Permissions.CONTACTS
+  //   )
+  //   if (permission.status !== 'granted') {
+  //     // Permission was denied...
+  //     this.setState({ loading: false, contactPermissionDenied: true })
+  //     return
+  //   }
+  // }
 
   editContactInfo = (name, number, i) => {
     this.setState({

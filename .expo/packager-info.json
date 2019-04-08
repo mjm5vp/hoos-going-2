@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://p8-uf7.mjm5vp.hoos-going-2.exp.direct",
+  "packagerNgrokUrl": "https://packager.p8-uf7.mjm5vp.hoos-going-2.exp.direct",
+  "ngrokPid": 9339
 }

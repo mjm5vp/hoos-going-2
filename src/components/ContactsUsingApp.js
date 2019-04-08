@@ -6,9 +6,13 @@ import _ from 'lodash'
 import { Permissions } from 'expo'
 
 import addStyles from '../styles/addStyles'
-import { getContactsAsync, getUsersNumbers } from '../services/contacts'
+import {
+  getContactsAsync,
+  getUsersNumbers,
+  removeFriendsFromContacts
+} from '../services/contacts'
 import { setAllContacts, setUsersNumbers, acceptFriend } from '../actions'
-import AddFriendModal from '../modals/AddFriendModal'
+import EditFriendModal from '../modals/AddFriendModal'
 
 class ContactsUsingApp extends Component {
   state = {
@@ -19,7 +23,8 @@ class ContactsUsingApp extends Component {
     usingAppNamesAndNumbers: [],
     addName: '',
     addNumber: '',
-    addFriendModalVisible: false
+    addFriendModalVisible: false,
+    editFriendModalVisible: false
   }
 
   componentDidMount() {
@@ -37,13 +42,14 @@ class ContactsUsingApp extends Component {
 
     if (contactPermissionGranted) {
       this.setState({ contactPermissionDenied: false })
-      const allContacts = (await getContactsAsync()).filter(contacts => {
-        return !_.some(this.props.myFriends, ['number', number])
-      })
-
+      const allContacts = await getContactsAsync()
+      const contactsMinusFriends = removeFriendsFromContacts(
+        allContacts,
+        this.props.myFriends
+      )
       const usersNumbers = await getUsersNumbers()
-      this.setUsingAppList(allContacts, usersNumbers)
-      this.props.setAllContacts(allContacts)
+      this.setUsingAppList(contactsMinusFriends, usersNumbers)
+      this.props.setAllContacts(contactsMinusFriends)
       this.props.setUsersNumbers(usersNumbers)
     } else {
       this.setState({ contactPermissionDenied: true })
@@ -101,6 +107,12 @@ class ContactsUsingApp extends Component {
     this.setState({ addFriendModalVisible: false })
   }
 
+  onDecline = () => {
+    this.setState({
+      addFriendModalVisible: false
+    })
+  }
+
   render() {
     const { contactPermissionDenied, usingAppNamesAndNumbers } = this.state
     if (contactPermissionDenied) {
@@ -151,11 +163,14 @@ class ContactsUsingApp extends Component {
 
     return (
       <Card title="Contacts using Hoos Going 2">
-        <AddFriendModal
+        <EditFriendModal
           name={this.state.addName}
           number={this.state.addNumber}
           visible={this.state.addFriendModalVisible}
           onAccept={this.onAccept}
+          onDecline={this.onDecline}
+          onDelete={number => this.onDelete(number)}
+          editMode={false}
         />
         {finalList}
       </Card>

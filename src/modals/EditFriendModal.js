@@ -1,4 +1,4 @@
-import { FormInput, FormLabel } from 'react-native-elements'
+import { Input } from 'react-native-elements'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import Modal from 'react-native-modal'
@@ -9,25 +9,23 @@ const EditFriendModal = ({
   name,
   number,
   visible,
+  onAccept,
   onDecline,
+  onDelete,
   changeName,
   changeNumber,
-  deleteButton
+  editMode
 }) => {
   renderDeleteButton = () => {
-    return deleteButton ? (
+    return editMode ? (
       <View style={styles.buttonView}>
-        <TouchableOpacity onPress={this.onDelete}>
+        <TouchableOpacity onPress={() => onDelete(number)}>
           <View style={styles.dangerButton}>
             <Text style={styles.dangerButtonText}>Delete</Text>
           </View>
         </TouchableOpacity>
       </View>
     ) : null
-  }
-
-  onAccept = (name, number) => {
-    console.log(name)
   }
 
   return (
@@ -46,22 +44,19 @@ const EditFriendModal = ({
         <View style={styles.inputView}>
           <Text>Confirm contact info</Text>
 
-          <FormLabel>Name</FormLabel>
-          <FormInput value={name} onChangeText={changeName} />
+          <Input placeholder="Name" value={name} onChangeText={changeName} />
 
-          <FormLabel>Number</FormLabel>
-          <FormInput
+          <Input
+            placeholder="Number"
             keyboardType="number-pad"
             value={number}
             onChangeText={changeNumber}
           />
         </View>
         <View style={styles.buttonView}>
-          <TouchableOpacity
-            onPress={() => this.onAccept(this.state.name, this.state.number)}
-          >
+          <TouchableOpacity onPress={() => onAccept(name, number)}>
             <View style={styles.button}>
-              <Text>Add Friend</Text>
+              <Text>{editMode ? 'Edit' : 'Add'} Friend</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={onDecline}>

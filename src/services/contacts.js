@@ -12,8 +12,13 @@ export const getContactsAsync = async () => {
     console.error(e)
     console.error('could not get contacts')
   }
-  console.log(formatContacts(contacts).length)
   return formatContacts(contacts)
+}
+
+export const removeFriendsFromContacts = (contacts, friends) => {
+  return contacts.filter(contact => {
+    return !_.some(friends, ['number', contact.number])
+  })
 }
 
 export const getUsersNumbers = async () => {

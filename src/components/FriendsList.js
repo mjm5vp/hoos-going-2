@@ -8,11 +8,12 @@ import {
   setFriendsFromDb,
   setUsersNumbers
 } from '../actions'
+import EditFriendModal from '../modals/EditFriendModal'
 
 class FriendsList extends Component {
   state = {
     myFriends: [],
-    showModal: false,
+    addFriendModalVisible: false,
     editName: '',
     editNumber: '',
     id: null
@@ -27,12 +28,26 @@ class FriendsList extends Component {
     })
   }
 
-  editContactInfo = (name, number, i) => {
+  onDecline = () => {
     this.setState({
-      showModal: true,
+      editFriendModalVisible: false
+    })
+  }
+
+  onDelete = number => {
+    const newMyFriends = this.props.myFriends.filter(friend => {
+      return friend.number !== number
+    })
+
+    this.props.setFriends(newMyFriends)
+    this.setState({ editFriendModalVisible: false })
+  }
+
+  onPressFriend = (name, number) => {
+    this.setState({
       editName: name,
       editNumber: number,
-      id: i
+      editFriendModalVisible: true
     })
   }
 
@@ -43,9 +58,7 @@ class FriendsList extends Component {
       const { name, number } = friend
       return (
         <View key={i}>
-          <TouchableOpacity
-            onPress={() => this.editContactInfo(name, number, i)}
-          >
+          <TouchableOpacity onPress={() => this.onPressFriend(name, number)}>
             <View style={styles.friendView}>
               <Text>{name}</Text>
               <Text>{number}</Text>
@@ -56,7 +69,20 @@ class FriendsList extends Component {
       )
     })
 
-    return <Card title="My Friends">{myFriendsList}</Card>
+    return (
+      <Card title="My Friends">
+        <EditFriendModal
+          name={this.state.editName}
+          number={this.state.editNumber}
+          visible={this.state.editFriendModalVisible}
+          onAccept={this.onAccept}
+          onDecline={this.onDecline}
+          onDelete={this.onDelete}
+          editMode={true}
+        />
+        {myFriendsList}
+      </Card>
+    )
   }
 }
 

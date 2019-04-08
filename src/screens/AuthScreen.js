@@ -168,12 +168,6 @@ class AuthScreen extends Component {
               keyboardType="default"
               onChangeText={name => this.setState({ name })}
             />
-            {/* <FormLabel>Enter your name:</FormLabel>
-            <FormInput
-              value={this.state.name}
-              onChangeText={name => this.setState({ name })}
-              keyboardType="default"
-            /> */}
           </View>
           <Button title="Submit" onPress={this.handleNameSubmit} />
         </View>
@@ -190,12 +184,6 @@ class AuthScreen extends Component {
               onChangeText={phone => this.setState({ phone })}
               keyboardType="number-pad"
             />
-            {/* <FormLabel>Enter your phone number:</FormLabel>
-            <FormInput
-              value={this.state.phone}
-              onChangeText={phone => this.setState({ phone })}
-              keyboardType="number-pad"
-            /> */}
           </View>
           <Button title="Submit" onPress={this.handleSubmit} />
         </View>
@@ -211,12 +199,6 @@ class AuthScreen extends Component {
             onChangeText={code => this.setState({ code })}
             keyboardType="number-pad"
           />
-          {/* <FormLabel>Enter code:</FormLabel>
-        <FormInput
-            value={this.state.code}
-            onChangeText={code => this.setState({ code })}
-            keyboardType="number-pad"
-          /> */}
         </View>
 
         <Button title="Submit" onPress={this.signIn} />
@@ -247,9 +229,6 @@ class AuthScreen extends Component {
   }
 
   render() {
-    // console.log('this.props.fail');
-    // console.log(this.props.fail);
-
     return (
       <View style={styles.viewContainer}>
         {this.renderSpinner()}

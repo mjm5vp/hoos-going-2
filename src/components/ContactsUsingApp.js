@@ -7,7 +7,8 @@ import { Permissions } from 'expo'
 
 import addStyles from '../styles/addStyles'
 import { getContactsAsync, getUsersNumbers } from '../services/contacts'
-import { setAllContacts, setUsersNumbers } from '../actions'
+import { setAllContacts, setUsersNumbers, acceptFriend } from '../actions'
+import AddFriendModal from '../modals/AddFriendModal'
 
 class ContactsUsingApp extends Component {
   state = {
@@ -15,7 +16,10 @@ class ContactsUsingApp extends Component {
     contactPermissionDenied: true,
     allContacts: [],
     usersNumbers: [],
-    usingAppNamesAndNumbers: []
+    usingAppNamesAndNumbers: [],
+    addName: '',
+    addNumber: '',
+    addFriendModalVisible: false
   }
 
   componentDidMount() {
@@ -33,7 +37,10 @@ class ContactsUsingApp extends Component {
 
     if (contactPermissionGranted) {
       this.setState({ contactPermissionDenied: false })
-      const allContacts = await getContactsAsync()
+      const allContacts = (await getContactsAsync()).filter(contacts => {
+        return !_.some(this.props.myFriends, ['number', number])
+      })
+
       const usersNumbers = await getUsersNumbers()
       this.setUsingAppList(allContacts, usersNumbers)
       this.props.setAllContacts(allContacts)
@@ -62,6 +69,36 @@ class ContactsUsingApp extends Component {
     })
 
     this.setState({ usingAppNamesAndNumbers })
+  }
+
+  onPressUser = (name, number) => {
+    this.setState({
+      addName: name,
+      addNumber: number,
+      addFriendModalVisible: true
+    })
+  }
+
+  changeName = addName => {
+    this.setState({ addName })
+  }
+
+  changeNumber = addNumber => {
+    this.setState({ addNumber })
+  }
+
+  onAccept = () => {
+    const { name, number } = this.props.myInfo
+    const { notificationToken } = this.props
+
+    this.props.acceptFriend({
+      name: this.state.addName,
+      number: this.state.addNumber,
+      myName: name,
+      myNumber: number,
+      notificationToken
+    })
+    this.setState({ addFriendModalVisible: false })
   }
 
   render() {
@@ -112,7 +149,17 @@ class ContactsUsingApp extends Component {
       )
     })
 
-    return <Card title="Contacts using Hoos Going 2">{finalList}</Card>
+    return (
+      <Card title="Contacts using Hoos Going 2">
+        <AddFriendModal
+          name={this.state.addName}
+          number={this.state.addNumber}
+          visible={this.state.addFriendModalVisible}
+          onAccept={this.onAccept}
+        />
+        {finalList}
+      </Card>
+    )
   }
 }
 
@@ -120,7 +167,14 @@ const styles = {
   containerView: { flexDirection: 'row', justifyContent: 'space-between' }
 }
 
+const mapStateToProps = state => {
+  const { myInfo, notificationToken } = state.auth
+  const { myFriends } = state.friends
+
+  return { myInfo, notificationToken, myFriends }
+}
+
 export default connect(
-  null,
-  { setAllContacts, setUsersNumbers }
+  mapStateToProps,
+  { setAllContacts, setUsersNumbers, acceptFriend }
 )(ContactsUsingApp)

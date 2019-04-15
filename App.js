@@ -34,6 +34,7 @@ import AddFriendsScreen from './src/screens/AddFriendsScreen'
 import SendToFriendsScreen from './src/screens/SendToFriendsScreen'
 import ProfileScreen from './src/screens/ProfileScreen'
 import SentToMeScreen from './src/screens/SentToMeScreen'
+import AddContactsScreen from './src/screens/AddContactsScreen'
 
 // console.ignoredYellowBox = [
 //   'Warning: PropTypes',
@@ -52,6 +53,7 @@ let RootStack = createStackNavigator({
   settings: SettingsScreen,
   auth: AuthScreen,
   friends: FriendsScreen,
+  add_contacts: AddContactsScreen,
   add_friends: AddFriendsScreen,
   send_to_friends: SendToFriendsScreen,
   sent_to_me: SentToMeScreen,

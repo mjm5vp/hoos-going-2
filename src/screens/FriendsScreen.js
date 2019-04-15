@@ -164,6 +164,11 @@ class FriendsScreen extends Component {
           />
         }
       >
+        <Button
+          title="Contacts"
+          onPress={() => this.props.navigation.navigate('add_contacts')}
+          raised
+        />
         <ContactsUsingApp
           contactPermissionGranted={this.state.contactPermissionGranted}
           usingAppNamesAndNumbers={this.state.usingAppNamesAndNumbers}

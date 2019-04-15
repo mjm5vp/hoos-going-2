@@ -15,18 +15,17 @@ class FriendsList extends Component {
     myFriends: [],
     addFriendModalVisible: false,
     editName: '',
-    editNumber: '',
-    id: null
+    editNumber: ''
   }
   componentWillMount() {
     this.props.setFriendsFromDb()
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      myFriends: nextProps.myFriends
-    })
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({
+  //     myFriends: nextProps.myFriends
+  //   })
+  // }
 
   onDecline = () => {
     this.setState({
@@ -34,13 +33,13 @@ class FriendsList extends Component {
     })
   }
 
-  onDelete = number => {
+  onDelete = async number => {
     const newMyFriends = this.props.myFriends.filter(friend => {
       return friend.number !== number
     })
-
-    this.props.setFriends(newMyFriends)
     this.setState({ editFriendModalVisible: false })
+    await this.props.setFriends(newMyFriends)
+    this.props.refresh()
   }
 
   onPressFriend = (name, number) => {
@@ -52,7 +51,7 @@ class FriendsList extends Component {
   }
 
   render() {
-    const { myFriends } = this.state
+    const { myFriends } = this.props
 
     const myFriendsList = myFriends.map((friend, i) => {
       const { name, number } = friend

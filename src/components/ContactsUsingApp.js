@@ -1,80 +1,27 @@
 import React, { Component } from 'react'
-import { Text, TouchableOpacity, View, Linking } from 'react-native'
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Linking,
+  ActivityIndicator
+} from 'react-native'
 import { connect } from 'react-redux'
 import { Card, Icon, Button } from 'react-native-elements'
 import _ from 'lodash'
-import { Permissions } from 'expo'
 
 import addStyles from '../styles/addStyles'
-import {
-  getContactsAsync,
-  getUsersNumbers,
-  removeFriendsFromContacts
-} from '../services/contacts'
-import { setAllContacts, setUsersNumbers, acceptFriend } from '../actions'
+import { acceptFriend } from '../actions'
 import EditFriendModal from '../modals/AddFriendModal'
 
 class ContactsUsingApp extends Component {
   state = {
     loading: true,
-    contactPermissionDenied: true,
-    allContacts: [],
-    usersNumbers: [],
     usingAppNamesAndNumbers: [],
     addName: '',
     addNumber: '',
     addFriendModalVisible: false,
     editFriendModalVisible: false
-  }
-
-  componentDidMount() {
-    this.refreshContactAndUserData()
-  }
-
-  askContactsPermission = async () => {
-    // Ask for permission to query contacts.
-    const permission = await Permissions.askAsync(Permissions.CONTACTS)
-    return permission.status === 'granted'
-  }
-
-  refreshContactAndUserData = async () => {
-    const contactPermissionGranted = await this.askContactsPermission()
-
-    if (contactPermissionGranted) {
-      this.setState({ contactPermissionDenied: false })
-      const allContacts = await getContactsAsync()
-      const contactsMinusFriends = removeFriendsFromContacts(
-        allContacts,
-        this.props.myFriends
-      )
-      const usersNumbers = await getUsersNumbers()
-      this.setUsingAppList(contactsMinusFriends, usersNumbers)
-      this.props.setAllContacts(contactsMinusFriends)
-      this.props.setUsersNumbers(usersNumbers)
-    } else {
-      this.setState({ contactPermissionDenied: true })
-    }
-  }
-
-  setUsingAppList = (allContacts, usersNumbers) => {
-    const contactsNumbers = allContacts.map(contact => contact.number)
-
-    const usingApp = _.intersectionWith(
-      contactsNumbers,
-      usersNumbers,
-      _.isEqual
-    )
-    const usingAppNamesAndNumbers = []
-
-    usingApp.forEach(usingContact => {
-      usingAppNamesAndNumbers.push(
-        _.find(allContacts, contact => {
-          return usingContact === contact.number
-        })
-      )
-    })
-
-    this.setState({ usingAppNamesAndNumbers })
   }
 
   onPressUser = (name, number) => {
@@ -93,18 +40,20 @@ class ContactsUsingApp extends Component {
     this.setState({ addNumber })
   }
 
-  onAccept = () => {
+  onAccept = async () => {
     const { name, number } = this.props.myInfo
     const { notificationToken } = this.props
 
-    this.props.acceptFriend({
+    this.setState({ addFriendModalVisible: false })
+
+    await this.props.acceptFriend({
       name: this.state.addName,
       number: this.state.addNumber,
       myName: name,
       myNumber: number,
       notificationToken
     })
-    this.setState({ addFriendModalVisible: false })
+    this.props.refresh()
   }
 
   onDecline = () => {
@@ -113,9 +62,22 @@ class ContactsUsingApp extends Component {
     })
   }
 
+  getLoadingSpinner = () => {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
   render() {
-    const { contactPermissionDenied, usingAppNamesAndNumbers } = this.state
-    if (contactPermissionDenied) {
+    const { contactPermissionGranted, usingAppNamesAndNumbers } = this.props
+
+    if (contactPermissionGranted === null) {
+      return this.getLoadingSpinner()
+    }
+
+    if (!contactPermissionGranted) {
       return (
         <Card>
           <View>
@@ -132,9 +94,14 @@ class ContactsUsingApp extends Component {
         </Card>
       )
     }
+    if (usingAppNamesAndNumbers === null) {
+      return this.getLoadingSpinner()
+    }
+
     if (usingAppNamesAndNumbers.length === 0) {
       return null
     }
+
     const finalList = usingAppNamesAndNumbers.map((contact, i) => {
       const { name, number } = contact
       return (
@@ -191,5 +158,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { setAllContacts, setUsersNumbers, acceptFriend }
+  { acceptFriend }
 )(ContactsUsingApp)

@@ -56,7 +56,6 @@ export const formatContacts = contacts => {
     )
 
   contactsNamesAndNumbers = _.uniqWith(contactsNamesAndNumbers, _.isEqual)
-  console.log(contactsNamesAndNumbers)
   return _.sortBy(contactsNamesAndNumbers, contact => contact.name)
 }
 

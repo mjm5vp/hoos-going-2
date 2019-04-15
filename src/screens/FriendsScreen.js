@@ -7,12 +7,20 @@ import {
   Icon
 } from 'react-native-elements'
 import React, { Component } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Permissions } from 'expo'
+import {
+  getContactsAsync,
+  getUsersNumbers,
+  removeFriendsFromContacts
+} from '../services/contacts'
+import { ScrollView, RefreshControl } from 'react-native'
 import {
   acceptFriend,
   checkAddedMe,
   setFriends,
-  setFriendsFromDb
+  setFriendsFromDb,
+  setAllContacts,
+  setUsersNumbers
 } from '../actions'
 
 import ContactsUsingApp from '../components/ContactsUsingApp'
@@ -32,7 +40,11 @@ class FriendsScreen extends Component {
   }
 
   state = {
-    addedMe: [],
+    contactsMinusFriends: [],
+    usersNumbers: [],
+    usingAppNamesAndNumbers: null,
+    contactPermissionGranted: null,
+    refreshing: false,
     myFriends: [],
     currentUser: null,
     showModal: false,
@@ -50,21 +62,59 @@ class FriendsScreen extends Component {
       friend => friend.name.toLowerCase()
     ])
 
-    // this.askContactsPermission()
     this.setState({ currentUser, myFriends: sortedFriends })
+    this.refreshContactAndUserData()
   }
 
-  // askContactsPermission = async () => {
-  //   // Ask for permission to query contacts.
-  //   const permission = await Expo.Permissions.askAsync(
-  //     Expo.Permissions.CONTACTS
-  //   )
-  //   if (permission.status !== 'granted') {
-  //     // Permission was denied...
-  //     this.setState({ loading: false, contactPermissionDenied: true })
-  //     return
-  //   }
-  // }
+  askContactsPermission = async () => {
+    // Ask for permission to query contacts.
+    const permission = await Permissions.askAsync(Permissions.CONTACTS)
+    return permission.status === 'granted'
+  }
+
+  refreshContactAndUserData = async () => {
+    console.log('refresh')
+    const contactPermissionGranted = await this.askContactsPermission()
+
+    this.setState({ contactPermissionGranted })
+
+    if (contactPermissionGranted) {
+      const allContacts = await getContactsAsync()
+      const contactsMinusFriends = removeFriendsFromContacts(
+        allContacts,
+        this.props.myFriends
+      )
+      const usersNumbers = await getUsersNumbers()
+      const usingAppNamesAndNumbers = this.getUsingAppList(
+        contactsMinusFriends,
+        usersNumbers
+      )
+      this.setState({ contactsMinusFriends, usingAppNamesAndNumbers })
+      this.props.setAllContacts(contactsMinusFriends)
+      this.props.setUsersNumbers(usersNumbers)
+    }
+  }
+
+  getUsingAppList = (allContacts, usersNumbers) => {
+    const contactsNumbers = allContacts.map(contact => contact.number)
+
+    const usingApp = _.intersectionWith(
+      contactsNumbers,
+      usersNumbers,
+      _.isEqual
+    )
+    const usingAppNamesAndNumbers = []
+
+    usingApp.forEach(usingContact => {
+      usingAppNamesAndNumbers.push(
+        _.find(allContacts, contact => {
+          return usingContact === contact.number
+        })
+      )
+    })
+
+    return usingAppNamesAndNumbers
+  }
 
   editContactInfo = (name, number, i) => {
     this.setState({
@@ -98,68 +148,28 @@ class FriendsScreen extends Component {
     this.setState({ showModal: false })
   }
 
+  onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this.refreshContactAndUserData()
+    this.setState({ refreshing: false })
+  }
+
   render() {
     return (
-      <ScrollView>
-        {/* <Modal
-          isVisible={this.state.showModal}
-          backdropColor={'black'}
-          backdropOpacity={0.5}
-          animationIn={'slideInLeft'}
-          animationOut={'slideOutRight'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          backdropTransitionInTiming={250}
-          backdropTransitionOutTiming={250}
-        >
-          <View style={modalStyles.modalContent}>
-            <View style={modalStyles.inputView}>
-              <Text>Edit contact info</Text>
-
-              <FormLabel>Name</FormLabel>
-              <FormInput
-                value={this.state.editName}
-                onChangeText={editName => this.setState({ editName })}
-              />
-
-              <FormLabel>Number</FormLabel>
-              <FormInput
-                value={this.state.editNumber}
-                onChangeText={editNumber => this.setState({ editNumber })}
-              />
-            </View>
-            <View style={modalStyles.buttonView}>
-              <TouchableOpacity onPress={this.onEditAccept}>
-                <View style={modalStyles.button}>
-                  <Text>Edit</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.onCancel}>
-                <View style={modalStyles.cancelButton}>
-                  <Text>Cancel</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={modalStyles.buttonView}>
-              <TouchableOpacity onPress={this.onDelete}>
-                <View style={modalStyles.dangerButton}>
-                  <Text style={modalStyles.dangerButtonText}>Delete</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal> */}
-
-        {/* {this.renderAddedMe()} */}
-        {/* <View style={styles.menuView}> */}
-
-        {/* <Button
-            title='Add Friends'
-            onPress={() => this.props.navigation.navigate('add_friends')}
-          /> */}
-        {/* </View> */}
-        <ContactsUsingApp />
-        <FriendsList />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+      >
+        <ContactsUsingApp
+          contactPermissionGranted={this.state.contactPermissionGranted}
+          usingAppNamesAndNumbers={this.state.usingAppNamesAndNumbers}
+          refresh={() => this.refreshContactAndUserData()}
+        />
+        <FriendsList refresh={() => this.refreshContactAndUserData()} />
       </ScrollView>
     )
   }
@@ -196,6 +206,8 @@ export default connect(
     checkAddedMe,
     acceptFriend,
     setFriendsFromDb,
-    setFriends
+    setFriends,
+    setAllContacts,
+    setUsersNumbers
   }
 )(FriendsScreen)

@@ -13,7 +13,7 @@ import {
   getUsersNumbers,
   removeFriendsFromContacts
 } from '../services/contacts'
-import { ScrollView, RefreshControl } from 'react-native'
+import { View, ScrollView, RefreshControl } from 'react-native'
 import {
   acceptFriend,
   checkAddedMe,
@@ -25,6 +25,7 @@ import {
 
 import ContactsUsingApp from '../components/ContactsUsingApp'
 import FriendsList from '../components/FriendsList'
+import EditFriendModal from '../modals/EditFriendModal'
 import Modal from 'react-native-modal'
 import _ from 'lodash'
 import { connect } from 'react-redux'
@@ -45,11 +46,14 @@ class FriendsScreen extends Component {
     usingAppNamesAndNumbers: null,
     contactPermissionGranted: null,
     refreshing: false,
+    addFriendByNumberModalVisible: false,
     myFriends: [],
     currentUser: null,
     showModal: false,
     editName: '',
     editNumber: '',
+    addNameNew: '',
+    addNumberNew: '',
     id: ''
   }
 
@@ -145,7 +149,30 @@ class FriendsScreen extends Component {
   }
 
   onCancel = () => {
-    this.setState({ showModal: false })
+    this.setState({ addFriendByNumberModalVisible: false })
+  }
+
+  onAcceptNew = () => {
+    const { name, number } = this.props.myInfo
+    const { notificationToken } = this.props
+
+    this.setState({ addFriendByNumberModalVisible: false })
+
+    this.props.acceptFriend({
+      name: this.state.addNameNew,
+      number: this.state.addNumberNew,
+      myName: name,
+      myNumber: number,
+      notificationToken
+    })
+  }
+
+  changeName = addNameNew => {
+    this.setState({ addNameNew })
+  }
+
+  changeNumber = addNumberNew => {
+    this.setState({ addNumberNew })
   }
 
   onRefresh = async () => {
@@ -164,11 +191,33 @@ class FriendsScreen extends Component {
           />
         }
       >
-        <Button
-          title="Contacts"
-          onPress={() => this.props.navigation.navigate('add_contacts')}
-          raised
+        <EditFriendModal
+          name={this.state.addNameNew}
+          number={this.state.addNumberNew}
+          visible={this.state.addFriendByNumberModalVisible}
+          changeName={name => this.changeName(name)}
+          changeNumber={number => this.changeNumber(number)}
+          onAccept={this.onAcceptNew}
+          onDecline={this.onCancel}
+          editMode={false}
         />
+        <View style={styles.iconContainer}>
+          <Icon
+            name="address-book"
+            type="font-awesome"
+            onPress={() => this.props.navigation.navigate('add_contacts')}
+            reverse
+          />
+          <Icon
+            name="hashtag"
+            type="font-awesome"
+            onPress={() =>
+              this.setState({ addFriendByNumberModalVisible: true })
+            }
+            reverse
+          />
+        </View>
+
         <ContactsUsingApp
           contactPermissionGranted={this.state.contactPermissionGranted}
           usingAppNamesAndNumbers={this.state.usingAppNamesAndNumbers}
@@ -181,6 +230,10 @@ class FriendsScreen extends Component {
 }
 
 const styles = {
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
   menuView: {
     flexDirection: 'row'
   },

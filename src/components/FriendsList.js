@@ -15,17 +15,30 @@ class FriendsList extends Component {
     myFriends: [],
     addFriendModalVisible: false,
     editName: '',
-    editNumber: ''
+    editNumber: '',
+    oldNumber: ''
   }
   componentWillMount() {
     this.props.setFriendsFromDb()
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({
-  //     myFriends: nextProps.myFriends
-  //   })
-  // }
+  onEdit = async () => {
+    const newMyFriends = this.props.myFriends.map(friend => {
+      if (friend.number === this.state.oldNumber) {
+        return {
+          ...friend,
+          name: this.state.editName,
+          number: this.state.editNumber
+        }
+      } else {
+        return friend
+      }
+    })
+
+    this.setState({ editFriendModalVisible: false })
+    await this.props.setFriends(newMyFriends)
+    this.props.refresh()
+  }
 
   onDecline = () => {
     this.setState({
@@ -46,8 +59,17 @@ class FriendsList extends Component {
     this.setState({
       editName: name,
       editNumber: number,
-      editFriendModalVisible: true
+      editFriendModalVisible: true,
+      oldNumber: number
     })
+  }
+
+  changeName = editName => {
+    this.setState({ editName })
+  }
+
+  changeNumber = editNumber => {
+    this.setState({ editNumber })
   }
 
   render() {
@@ -73,8 +95,10 @@ class FriendsList extends Component {
         <EditFriendModal
           name={this.state.editName}
           number={this.state.editNumber}
+          changeName={name => this.changeName(name)}
+          changeNumber={number => this.changeNumber(number)}
           visible={this.state.editFriendModalVisible}
-          onAccept={this.onAccept}
+          onAccept={this.onEdit}
           onDecline={this.onDecline}
           onDelete={this.onDelete}
           editMode={true}

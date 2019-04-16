@@ -13,7 +13,7 @@ import {
   getUsersNumbers,
   removeFriendsFromContacts
 } from '../services/contacts'
-import { View, ScrollView, RefreshControl } from 'react-native'
+import { View, ScrollView, RefreshControl, Linking } from 'react-native'
 import {
   acceptFriend,
   checkAddedMe,
@@ -32,6 +32,7 @@ import { connect } from 'react-redux'
 import firebase from 'firebase'
 import modalStyles from '../styles/modalStyles'
 import { registerForPushNotificationsAsync } from '../services/push_notifications'
+import ConfirmCancelModal from '../modals/ConfirmCancelModal'
 
 class FriendsScreen extends Component {
   static navigationOptions = () => {
@@ -47,6 +48,7 @@ class FriendsScreen extends Component {
     contactPermissionGranted: null,
     refreshing: false,
     addFriendByNumberModalVisible: false,
+    conactPermissionModalVisible: false,
     myFriends: [],
     currentUser: null,
     showModal: false,
@@ -149,7 +151,10 @@ class FriendsScreen extends Component {
   }
 
   onCancel = () => {
-    this.setState({ addFriendByNumberModalVisible: false })
+    this.setState({
+      addFriendByNumberModalVisible: false,
+      conactPermissionModalVisible: false
+    })
   }
 
   onAcceptNew = () => {
@@ -181,6 +186,14 @@ class FriendsScreen extends Component {
     this.setState({ refreshing: false })
   }
 
+  onPressContacts = () => {
+    if (this.state.contactPermissionGranted) {
+      this.props.navigation.navigate('add_contacts')
+    } else {
+      this.setState({ conactPermissionModalVisible: true })
+    }
+  }
+
   render() {
     return (
       <ScrollView
@@ -201,11 +214,17 @@ class FriendsScreen extends Component {
           onDecline={this.onCancel}
           editMode={false}
         />
+        <ConfirmCancelModal
+          visible={this.state.conactPermissionModalVisible}
+          infoText="Enable CONTACTS Permissions in Settings?"
+          onAccept={() => Linking.openURL('app-settings:')}
+          onDecline={this.onCancel}
+        />
         <View style={styles.iconContainer}>
           <Icon
             name="address-book"
             type="font-awesome"
-            onPress={() => this.props.navigation.navigate('add_contacts')}
+            onPress={this.onPressContacts}
             reverse
           />
           <Icon

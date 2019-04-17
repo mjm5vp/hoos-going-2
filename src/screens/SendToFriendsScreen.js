@@ -82,18 +82,14 @@ class SendToFriends extends Component {
     return this.state.myFriendsList.map((friend, i) => {
       const checked = friend.checked
       return (
-        <Card key={i}>
-          <View style={styles.cardView}>
-            <View>
-              <Text>{friend.name}</Text>
-            </View>
-            <CheckBox
-              onPress={() => this.checkBox(i)}
-              checked={checked}
-              center
-            />
-          </View>
-        </Card>
+        <CheckBox
+          key={i}
+          iconRight
+          title={friend.name}
+          onPress={() => this.checkBox(i)}
+          checked={checked}
+          center
+        />
       )
     })
   }

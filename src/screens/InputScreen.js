@@ -124,7 +124,7 @@ class InputScreen extends Component {
             style={{ marginTop: 10 }}
             onPress={() => this.props.navigation.navigate('map_select')}
             buttonStyle={styles.selectButton}
-            iconRight={{ name: 'google-maps', type: 'material-community' }}
+            // iconRight={{ name: 'google-maps', type: 'material-community' }}
             raised
           />
         </Card>
@@ -143,7 +143,7 @@ class InputScreen extends Component {
           onPress={() => this.props.navigation.navigate('map_select')}
           buttonStyle={styles.selectButton}
           raised
-          iconRight={{ name: 'google-maps', type: 'material-community' }}
+          // iconRight={{ name: 'google-maps', type: 'material-community' }}
         />
       </Card>
     )
@@ -383,7 +383,7 @@ class InputScreen extends Component {
               title="Send to friends"
               buttonStyle={styles.selectButton}
               raised
-              iconRight={{ name: 'send', type: 'font-awesome' }}
+              // iconRight={{ name: 'send', type: 'font-awesome' }}
               onPress={() => this.onSendToFriendsPress()}
             />
           </View>

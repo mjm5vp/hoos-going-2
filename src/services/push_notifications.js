@@ -64,19 +64,20 @@ export const checkAndSetPushToken = async () => {
   return null
 }
 
-export const sendNotifications = async ({ pushTokens }) => {
+export const sendNotifications = async ({
+  friendsWithPushTokens,
+  poo,
+  myInfo
+}) => {
   const ROOT_URL =
     'https://us-central1-one-time-password-698fc.cloudfunctions.net'
-  const text = 'test text'
-  const info = 'test info'
 
   try {
     await axios.post(`${ROOT_URL}/sendPushNotification`, {
-      pushTokens,
-      text,
-      info
+      friendsWithPushTokens,
+      poo,
+      myInfo
     })
-    console.log('sent')
   } catch (err) {
     console.log('try axios error')
     console.log(err)

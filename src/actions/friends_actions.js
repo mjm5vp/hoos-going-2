@@ -147,16 +147,15 @@ export const sendToFriendsAction = ({
         .push({ from: myInfo, poo })
       if (friend.pushToken) {
         friendsWithPushTokens.push(friend)
-        // sendNotification({ pushToken: friend.pushToken });
       }
     } catch (err) {
       console.log(`could not send to ${friend.name}`)
     }
 
     try {
-      await sendNotifications({ friendsWithPushTokens })
+      await sendNotifications({ friendsWithPushTokens, poo, myInfo })
     } catch (err) {
-      consol.error(`Unable to send notifications`)
+      console.error(`Unable to send notifications`)
     }
   })
 }

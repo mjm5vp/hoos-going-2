@@ -79,7 +79,6 @@ class FriendsScreen extends Component {
   }
 
   refreshContactAndUserData = async () => {
-    console.log('refresh')
     const contactPermissionGranted = await this.askContactsPermission()
 
     this.setState({ contactPermissionGranted })

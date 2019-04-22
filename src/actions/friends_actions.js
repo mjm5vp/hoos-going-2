@@ -66,13 +66,16 @@ export const acceptFriend = ({
 
     await firebase
       .database()
-      .ref(`users/${String(number)}/myInfo/pushToken`)
+      .ref(`users/${String(number)}/pushToken`)
       .once('value', snapshot => {
         if (snapshot.val()) {
           pushToken = snapshot.val()
         }
       })
 
+    console.log(name)
+    console.log(number)
+    console.log(pushToken)
     firebase
       .database()
       .ref(`/users/${currentUser.uid}/myFriends/`)
@@ -83,7 +86,10 @@ export const acceptFriend = ({
       .ref(`/users/${String(number)}/myFriends/`)
       .push({ name: myName, number: myNumber, pushToken: notificationToken })
 
-    dispatch({ type: ACCEPT_FRIEND, payload: { name, number } })
+    dispatch({
+      type: ACCEPT_FRIEND,
+      payload: { name, number, notificationToken }
+    })
   } catch (err) {
     console.log('could not accept friend')
     console.log(err)
@@ -131,8 +137,7 @@ export const sendToFriendsAction = ({
   poo,
   myInfo
 }) => async dispatch => {
-  // const { currentUser } = firebase.auth();
-  const pushTokens = []
+  const friendsWithPushTokens = []
 
   sendToFriends.forEach(async (friend, i) => {
     try {
@@ -141,16 +146,17 @@ export const sendToFriendsAction = ({
         .ref(`users/${friend.number}/sentToMe`)
         .push({ from: myInfo, poo })
       if (friend.pushToken) {
-        console.log('friend.pushToken')
-        console.log(friend.pushToken)
-        pushTokens.push(friend.pushToken)
+        friendsWithPushTokens.push(friend)
         // sendNotification({ pushToken: friend.pushToken });
-      }
-      if (i === sendToFriends.length - 1 && pushTokens.length > 0) {
-        await sendNotifications({ pushTokens })
       }
     } catch (err) {
       console.log(`could not send to ${friend.name}`)
+    }
+
+    try {
+      await sendNotifications({ friendsWithPushTokens })
+    } catch (err) {
+      consol.error(`Unable to send notifications`)
     }
   })
 }

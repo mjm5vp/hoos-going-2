@@ -41,7 +41,7 @@ export const formatContacts = contacts => {
   let contactsNamesAndNumbers = []
 
   contacts.data
-    .filter(contact => contact.phoneNumbers[0])
+    .filter(contact => contact.phoneNumbers && contact.phoneNumbers[0])
     .forEach(contact =>
       contact.phoneNumbers.forEach(phoneNumber => {
         const { name } = contact

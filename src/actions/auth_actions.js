@@ -26,6 +26,13 @@ export const editMyInfo = ({ name, number }) => {
   }
 }
 
+export const setMyInfoLocal = ({ name, number }) => {
+  return {
+    type: EDIT_MY_INFO,
+    payload: { name, number }
+  }
+}
+
 export const deleteUser = () => async dispatch => {
   const ROOT_URL =
     'https://us-central1-one-time-password-698fc.cloudfunctions.net'

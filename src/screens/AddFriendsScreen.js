@@ -175,18 +175,20 @@ class AddFriends extends Component {
     const contactsNumbers = []
     let contactsNamesAndNumbers = []
 
-    contacts.data.filter(contact => contact.phoneNumbers[0]).forEach(contact =>
-      contact.phoneNumbers.forEach(phoneNumber => {
-        const number = this.formatPhone(phoneNumber.number)
-        if (
-          number.length === 10 &&
-          !_.some(this.props.myFriends, ['number', number])
-        ) {
-          contactsNumbers.push(number)
-          contactsNamesAndNumbers.push({ name: contact.name, number })
-        }
-      })
-    )
+    contacts.data
+      .filter(contact => contact.phoneNumbers && contact.phoneNumbers[0])
+      .forEach(contact =>
+        contact.phoneNumbers.forEach(phoneNumber => {
+          const number = this.formatPhone(phoneNumber.number)
+          if (
+            number.length === 10 &&
+            !_.some(this.props.myFriends, ['number', number])
+          ) {
+            contactsNumbers.push(number)
+            contactsNamesAndNumbers.push({ name: contact.name, number })
+          }
+        })
+      )
 
     contactsNamesAndNumbers = _.uniqWith(contactsNamesAndNumbers, _.isEqual)
     contactsNamesAndNumbers = _.sortBy(

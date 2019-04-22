@@ -5,7 +5,12 @@ import axios from 'axios'
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 
-import { authLogin, editMyInfo, setNotificationToken } from '../actions'
+import {
+  authLogin,
+  editMyInfo,
+  setNotificationToken,
+  setMyInfoLocal
+} from '../actions'
 import {
   registerForPushNotificationsAsync,
   registerForRemoteNotifications
@@ -24,6 +29,7 @@ class AuthScreen extends Component {
     showSpinner: false,
     phoneEntered: false,
     showName: false,
+    userExists: false,
     fail: false
   }
 
@@ -65,29 +71,41 @@ class AuthScreen extends Component {
       .ref(`/users/${phone}`)
       .once('value', snapshot => {
         if (snapshot.val()) {
-          // console.log('user exists');
-          const myInfo = snapshot.val().myInfo
-          this.props.editMyInfo(myInfo)
-          this.setState({
-            showName: false,
-            phoneEntered: true,
-            name: myInfo.name,
-            message: `Welcome back ${myInfo.name}`,
-            codeMessage:
-              'You will recieve a text message shortly with a 4-digit code.'
-          })
-          // this.userExists(phone);
-          this.requestPassword(phone)
+          const { myInfo } = snapshot.val()
+          if (myInfo && myInfo.name) {
+            this.props.setMyInfoLocal(myInfo)
+            this.setState({
+              userExists: true,
+              showName: false,
+              phoneEntered: true,
+              name: myInfo.name,
+              message: `Welcome back ${myInfo.name}`,
+              codeMessage:
+                'You will recieve a text message shortly with a 4-digit code.'
+            })
+            // this.userExists(phone);
+            this.requestPassword(phone)
+          } else {
+            this.userExistsWithMissingInfo()
+          }
         } else {
-          console.log('user does not exist')
           Keyboard.dismiss()
           this.setState({
             showName: true,
             message: 'Welcome to Hoos Going 2!'
           })
-          // this.newUser(phone);
         }
       })
+  }
+
+  userExistsWithMissingInfo = () => {
+    Keyboard.dismiss()
+    this.setState({
+      userExists: true,
+      showName: true,
+      phoneEntered: true,
+      message: 'Welcome to Hoos Going 2!'
+    })
   }
 
   newUser = async phone => {
@@ -98,8 +116,9 @@ class AuthScreen extends Component {
         codeMessage:
           'You will recieve a text message shortly with a 4-digit code.'
       })
-      await axios.post(`${ROOT_URL}/createUser`, { phone })
-      console.log('user created')
+      if (!this.state.userExists) {
+        await axios.post(`${ROOT_URL}/createUser`, { phone })
+      }
       this.requestPassword(phone)
     } catch (err) {
       console.log(err)
@@ -133,7 +152,7 @@ class AuthScreen extends Component {
         data: { token }
       } = await axios.post(`${ROOT_URL}/verifyOneTimePassword`, { phone, code })
       await this.props.authLogin({ token, myPoos, phone, myFriends })
-      const pushToken = await registerForRemoteNotifications(notificationToken)
+      const pushToken = await registerForPushNotificationsAsync()
       await this.props.setNotificationToken({ pushToken })
     } catch (err) {
       this.setState({
@@ -145,7 +164,7 @@ class AuthScreen extends Component {
   }
 
   handleNameSubmit = () => {
-    const { name, phone } = this.state
+    const { name, phone, userExists } = this.state
 
     if (name.length > 0) {
       this.props.editMyInfo({ name, number: phone })
@@ -194,6 +213,7 @@ class AuthScreen extends Component {
       <View>
         <View style={{ marginBottom: 10 }}>
           <Input
+            maxLength={4}
             placeholder="Enter code"
             value={this.state.code}
             onChangeText={code => this.setState({ code })}
@@ -258,6 +278,7 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {
+    setMyInfoLocal,
     authLogin,
     editMyInfo,
     setNotificationToken

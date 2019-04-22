@@ -49,14 +49,20 @@ class InputScreen extends Component {
   }
 
   componentWillMount() {
-    const { currentUser } = firebase.auth()
+    this.setAuthSubscription()
     const date = moment().format('YYYY-MM-DD')
     const time = moment().format('HH:mm')
     const datetime = `${date}T${time}`
 
     this.props.updateDateTime(datetime)
 
-    this.setState({ currentUser, date: moment(), time: moment() })
+    this.setState({ date: moment(), time: moment() })
+  }
+
+  setAuthSubscription = () => {
+    firebase.auth().onAuthStateChanged(currentUser => {
+      this.setState({ currentUser })
+    })
   }
 
   showDatePicker = () => this.setState({ isDatePickerVisible: true })

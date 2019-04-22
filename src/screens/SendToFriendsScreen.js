@@ -83,12 +83,12 @@ class SendToFriends extends Component {
       const checked = friend.checked
       return (
         <CheckBox
+          containerStyle={styles.checkboxContainer}
           key={i}
-          iconRight
           title={friend.name}
           onPress={() => this.checkBox(i)}
           checked={checked}
-          center
+          checkedColor="green"
         />
       )
     })
@@ -147,6 +147,10 @@ class SendToFriends extends Component {
 }
 
 const styles = {
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   checkedFriendsCard: {
     position: 'absolute',
     bottom: 10,

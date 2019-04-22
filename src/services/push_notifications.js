@@ -21,40 +21,23 @@ export const registerForPushNotificationsAsync = async () => {
 
   // Stop here if the user did not grant permissions
   if (finalStatus !== 'granted') {
-    return
+    return null
   }
 
   // Get the token that uniquely identifies this device
   const token = await Notifications.getExpoPushTokenAsync()
-  console.log('notification token')
-  console.log(token)
-
-  // POST the token to your backend server from where you
-  // can retrieve it to send push notifications.
-  // try {
-  //   await firebase.database().ref(`users/${currentUser.uid}/notifications`)
-  //     .set({ token });
-  // } catch (err) {
-  //   console.log(err);
-  //   console.log('could not save notification token');
-  // }
 
   return token
 }
 
 export const registerForRemoteNotifications = async previousToken => {
   if (previousToken) {
-    console.log('previousToken exists')
-    console.log(previousToken)
     return previousToken
   }
 
   const { status } = await Permissions.askAsync(
     Permissions.REMOTE_NOTIFICATIONS
   )
-
-  console.log('status')
-  console.log(status)
 
   if (status !== 'granted') {
     return null

@@ -5,6 +5,7 @@ import { Image, View, Alert, Text } from 'react-native'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 import { Provider } from 'react-redux'
 import firebase from 'firebase'
+import _ from 'lodash'
 
 // Map Images
 import defaultMapImage from './assets/maps/default.png'
@@ -12,7 +13,7 @@ import satelliteMapImage from './assets/maps/satellite.png'
 import terrainMapImage from './assets/maps/terrain.png'
 
 // Poo Images
-import allPoos from './assets/pooExport'
+import allNamedPoos from './assets/namedPooExport'
 
 // Background Images
 import feetBackground from './assets/backgrounds/feet_background.jpg'
@@ -84,7 +85,7 @@ export default class App extends React.Component {
   }
 
   async loadAssetsAsync() {
-    const poos = allPoos.map(poo => poo.image)
+    const poos = _.map(allNamedPoos, poo => poo.image)
     const imageAssets = cacheImages([
       feetBackground,
       defaultMapImage,
@@ -109,12 +110,7 @@ export default class App extends React.Component {
       messagingSenderId: '1035913942891'
     }
     firebase.initializeApp(config)
-    // this.notificationSubscription = Notifications.addListener(this.handleNotification);
-    // console.log('origin');
-    // console.log(this.state.notification.origin);
-    // console.log('data');
-    // console.log(JSON.stringify(this.state.notification.data));
-    // registerForNotifications();
+
     Notifications.addListener(notification => {
       const {
         data: { text },

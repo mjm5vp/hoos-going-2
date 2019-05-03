@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { ScrollView, View, Image, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { selectPoo } from '../actions'
@@ -33,7 +33,11 @@ class PooSelect extends Component {
   }
 
   render() {
-    return <View style={styles.viewStyle}>{this.renderPooSelects()}</View>
+    return (
+      <ScrollView>
+        <View style={styles.viewStyle}>{this.renderPooSelects()}</View>
+      </ScrollView>
+    )
   }
 }
 

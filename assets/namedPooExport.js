@@ -113,9 +113,7 @@ import umbrella from './pooImages/umbrella.png'
 import snorkle from './pooImages/snorkle.png'
 import girlSnorkle from './pooImages/girlSnorkle.png'
 
-const pooNames = [angel, heartEyes, basic, thumb, queen, pomPoms, chicken, sad]
-
-let allNamedPoos = {
+export default (allNamedPoos = {
   basketball: {
     name: 'basketball',
     image: basketball
@@ -235,19 +233,333 @@ let allNamedPoos = {
   wine: {
     name: 'wine',
     image: wine
-  }
-}
-
-const varToString = varObj => Object.keys(varObj)[0]
-
-pooNames.forEach(name => {
-  allNamedPoos = {
-    ...allNamedPoos,
-    [varToString(name)]: {
-      name: varToString(name),
-      image: name
-    }
+  },
+  angel: {
+    name: 'angel',
+    image: angel
+  },
+  heartEyes: {
+    name: 'heartEyes',
+    image: heartEyes
+  },
+  basic: {
+    name: 'basic',
+    image: basic
+  },
+  thumb: {
+    name: 'thumb',
+    image: thumb
+  },
+  queen: {
+    name: 'queen',
+    image: queen
+  },
+  pomPoms: {
+    name: 'pomPoms',
+    image: pomPoms
+  },
+  chicken: {
+    name: 'chicken',
+    image: chicken
+  },
+  sad: {
+    name: 'sad',
+    image: sad
+  },
+  greenSick: {
+    name: 'greenSick',
+    image: greenSick
+  },
+  meh: {
+    name: 'meh',
+    image: meh
+  },
+  smileBlush: {
+    name: 'smileBlush',
+    image: smileBlush
+  },
+  yum: {
+    name: 'yum',
+    image: yum
+  },
+  wink: {
+    name: 'wink',
+    image: wink
+  },
+  sweat: {
+    name: 'sweat',
+    image: sweat
+  },
+  embarrassed: {
+    name: 'embarrassed',
+    image: embarrassed
+  },
+  wah: {
+    name: 'wah',
+    image: wah
+  },
+  maskSick: {
+    name: 'maskSick',
+    image: maskSick
+  },
+  noseAir: {
+    name: 'noseAir',
+    image: noseAir
+  },
+  yikes: {
+    name: 'yikes',
+    image: yikes
+  },
+  scream: {
+    name: 'scream',
+    image: scream
+  },
+  smirk: {
+    name: 'smirk',
+    image: smirk
+  },
+  float: {
+    name: 'float',
+    image: float
+  },
+  dead: {
+    name: 'dead',
+    image: dead
+  },
+  catKiss: {
+    name: 'catKiss',
+    image: catKiss
+  },
+  catHeartEyes: {
+    name: 'catHeartEyes',
+    image: catHeartEyes
+  },
+  loose: {
+    name: 'loose',
+    image: loose
+  },
+  dog: {
+    name: 'dog',
+    image: dog
+  },
+  catSad: {
+    name: 'catSad',
+    image: catSad
+  },
+  greenBleh: {
+    name: 'greenBleh',
+    image: greenBleh
+  },
+  bull: {
+    name: 'bull',
+    image: bull
+  },
+  skinny: {
+    name: 'skinny',
+    image: skinny
+  },
+  frozen: {
+    name: 'frozen',
+    image: frozen
+  },
+  catLaughCry: {
+    name: 'catLaughCry',
+    image: catLaughCry
+  },
+  bunny: {
+    name: 'bunny',
+    image: bunny
+  },
+  couple: {
+    name: 'couple',
+    image: couple
+  },
+  mouse: {
+    name: 'mouse',
+    image: mouse
+  },
+  koala: {
+    name: 'koala',
+    image: koala
+  },
+  speakNoEvil: {
+    name: 'speakNoEvil',
+    image: speakNoEvil
+  },
+  girlCouple: {
+    name: 'girlCouple',
+    image: girlCouple
+  },
+  seeNoEvil: {
+    name: 'seeNoEvil',
+    image: seeNoEvil
+  },
+  jordan: {
+    name: 'jordan',
+    image: jordan
+  },
+  cowgirl: {
+    name: 'cowgirl',
+    image: cowgirl
+  },
+  bride: {
+    name: 'bride',
+    image: bride
+  },
+  football: {
+    name: 'football',
+    image: football
+  },
+  outlaw: {
+    name: 'outlaw',
+    image: outlaw
+  },
+  soccer: {
+    name: 'soccer',
+    image: soccer
+  },
+  tennis: {
+    name: 'tennis',
+    image: tennis
+  },
+  punk: {
+    name: 'punk',
+    image: punk
+  },
+  blowDry: {
+    name: 'blowDry',
+    image: blowDry
+  },
+  hockey: {
+    name: 'hockey',
+    image: hockey
+  },
+  vampire: {
+    name: 'vampire',
+    image: vampire
+  },
+  baseball: {
+    name: 'baseball',
+    image: baseball
+  },
+  nails: {
+    name: 'nails',
+    image: nails
+  },
+  fishing: {
+    name: 'fishing',
+    image: fishing
+  },
+  cricket: {
+    name: 'cricket',
+    image: cricket
+  },
+  ghost: {
+    name: 'ghost',
+    image: ghost
+  },
+  helmet: {
+    name: 'helmet',
+    image: helmet
+  },
+  pumpkin: {
+    name: 'pumpkin',
+    image: pumpkin
+  },
+  baby: {
+    name: 'baby',
+    image: baby
+  },
+  headphones: {
+    name: 'headphones',
+    image: headphones
+  },
+  santa: {
+    name: 'santa',
+    image: santa
+  },
+  child: {
+    name: 'child',
+    image: child
+  },
+  girlSelfie: {
+    name: 'girlSelfie',
+    image: girlSelfie
+  },
+  selfie: {
+    name: 'selfie',
+    image: selfie
+  },
+  dj: {
+    name: 'dj',
+    image: dj
+  },
+  sombrero: {
+    name: 'sombrero',
+    image: sombrero
+  },
+  nixon: {
+    name: 'nixon',
+    image: nixon
+  },
+  fireworks: {
+    name: 'fireworks',
+    image: fireworks
+  },
+  graduate: {
+    name: 'graduate',
+    image: graduate
+  },
+  cocktail: {
+    name: 'cocktail',
+    image: cocktail
+  },
+  burger: {
+    name: 'burger',
+    image: burger
+  },
+  grampa: {
+    name: 'grampa',
+    image: grampa
+  },
+  wineRose: {
+    name: 'wineRose',
+    image: wineRose
+  },
+  grandma: {
+    name: 'grandma',
+    image: grandma
+  },
+  flask: {
+    name: 'flask',
+    image: flask
+  },
+  fatIcecream: {
+    name: 'fatIcecream',
+    image: fatIcecream
+  },
+  burntAss: {
+    name: 'burntAss',
+    image: burntAss
+  },
+  sun: {
+    name: 'sun',
+    image: sun
+  },
+  sunscreen: {
+    name: 'sunscreen',
+    image: sunscreen
+  },
+  umbrella: {
+    name: 'umbrella',
+    image: umbrella
+  },
+  snorkle: {
+    name: 'snorkle',
+    image: snorkle
+  },
+  girlSnorkle: {
+    name: 'girlSnorkle',
+    image: girlSnorkle
   }
 })
-
-export default allNamedPoos

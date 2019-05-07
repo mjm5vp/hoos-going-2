@@ -62,6 +62,18 @@ class ContactsUsingApp extends Component {
     })
   }
 
+  changeName = addName => {
+    this.setState({
+      addName
+    })
+  }
+
+  changeNumber = addNumber => {
+    this.setState({
+      addNumber
+    })
+  }
+
   getLoadingSpinner = () => {
     return (
       <View>
@@ -136,6 +148,8 @@ class ContactsUsingApp extends Component {
           visible={this.state.addFriendModalVisible}
           onAccept={this.onAccept}
           onDecline={this.onDecline}
+          changeName={name => this.changeName(name)}
+          changeNumber={number => this.changeNumber(number)}
           onDelete={number => this.onDelete(number)}
           editMode={false}
         />

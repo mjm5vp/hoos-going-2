@@ -33,6 +33,7 @@ import firebase from 'firebase'
 import modalStyles from '../styles/modalStyles'
 import { registerForPushNotificationsAsync } from '../services/push_notifications'
 import ConfirmCancelModal from '../modals/ConfirmCancelModal'
+import { parseNumber, phoneUtil } from '../services/phone_validation'
 
 class FriendsScreen extends Component {
   static navigationOptions = () => {
@@ -160,15 +161,19 @@ class FriendsScreen extends Component {
     const { name, number } = this.props.myInfo
     const { notificationToken } = this.props
 
-    this.setState({ addFriendByNumberModalVisible: false })
+    console.log(
+      phoneUtil.isPossibleNumber(parseNumber(this.state.addNumberNew))
+    )
 
-    this.props.acceptFriend({
-      name: this.state.addNameNew,
-      number: this.state.addNumberNew,
-      myName: name,
-      myNumber: number,
-      notificationToken
-    })
+    // this.setState({ addFriendByNumberModalVisible: false })
+
+    // this.props.acceptFriend({
+    //   name: this.state.addNameNew,
+    //   number: this.state.addNumberNew,
+    //   myName: name,
+    //   myNumber: number,
+    //   notificationToken
+    // })
   }
 
   changeName = addNameNew => {

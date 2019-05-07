@@ -72,10 +72,6 @@ export const acceptFriend = ({
           pushToken = snapshot.val()
         }
       })
-
-    console.log(name)
-    console.log(number)
-    console.log(pushToken)
     firebase
       .database()
       .ref(`/users/${currentUser.uid}/myFriends/`)

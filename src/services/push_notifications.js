@@ -30,29 +30,12 @@ export const registerForPushNotificationsAsync = async () => {
   return token
 }
 
-export const registerForRemoteNotifications = async previousToken => {
-  if (previousToken) {
-    return previousToken
-  }
-
-  const { status } = await Permissions.askAsync(
-    Permissions.REMOTE_NOTIFICATIONS
-  )
-
-  if (status !== 'granted') {
-    return null
-  }
-
-  const newToken = await Notifications.getExpoPushTokenAsync()
-  return newToken
-}
-
 export const checkIfNotificationsOn = async () => {
-  const { status } = await Permissions.getAsync(
-    Permissions.REMOTE_NOTIFICATIONS
+  const { status: existingStatus } = await Permissions.getAsync(
+    Permissions.NOTIFICATIONS
   )
 
-  return status === 'granted'
+  return existingStatus === 'granted'
 }
 
 export const checkAndSetPushToken = async () => {

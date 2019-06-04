@@ -4,6 +4,7 @@ import { Input, Button } from 'react-native-elements'
 import axios from 'axios'
 import firebase from 'firebase'
 import { connect } from 'react-redux'
+import PhoneInput from 'react-native-phone-input'
 
 import {
   authLogin,
@@ -11,10 +12,10 @@ import {
   setNotificationToken,
   setMyInfoLocal
 } from '../actions'
-import {
-  registerForPushNotificationsAsync,
-  registerForRemoteNotifications
-} from '../services/push_notifications'
+import { registerForPushNotificationsAsync } from '../services/push_notifications'
+import { phoneUtil } from '../services/phone_validation'
+import CountryPicker from 'react-native-country-picker-modal'
+import EnterCode from '../components/EnterCode'
 
 const ROOT_URL =
   'https://us-central1-one-time-password-698fc.cloudfunctions.net'
@@ -30,11 +31,11 @@ class AuthScreen extends Component {
     phoneEntered: false,
     showName: false,
     userExists: false,
-    fail: false
+    fail: false,
+    cca2: 'US'
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps')
     if (nextProps.token) {
       this.setState({ showSpinner: false })
       this.props.navigation.goBack()
@@ -46,12 +47,9 @@ class AuthScreen extends Component {
   }
 
   handleSubmit = async () => {
-    const { phone } = this.state
-
-    const number = this.formatPhone(phone)
-
-    if (number.length === 10) {
-      this.checkIfUserIdExists(number)
+    console.log(this.formatPhone(this.phone.getValue()))
+    if (this.phone.isValidNumber()) {
+      this.checkIfUserIdExists(this.formatPhone(this.phone.getValue()))
       // this.setState({ phoneEntered: true, phone: number });
     } else {
       this.setState({
@@ -61,8 +59,7 @@ class AuthScreen extends Component {
   }
 
   formatPhone = phone => {
-    const number = String(phone).replace(/[^\d]/g, '')
-    return number.charAt(0) === '1' ? number.substring(1) : number
+    return String(phone).replace(/[^\d]/g, '')
   }
 
   checkIfUserIdExists = async phone => {
@@ -73,6 +70,7 @@ class AuthScreen extends Component {
         if (snapshot.val()) {
           const { myInfo } = snapshot.val()
           if (myInfo && myInfo.name) {
+            this.requestPassword(phone)
             this.props.setMyInfoLocal(myInfo)
             this.setState({
               userExists: true,
@@ -83,8 +81,6 @@ class AuthScreen extends Component {
               codeMessage:
                 'You will recieve a text message shortly with a 4-digit code.'
             })
-            // this.userExists(phone);
-            this.requestPassword(phone)
           } else {
             this.userExistsWithMissingInfo()
           }
@@ -176,7 +172,21 @@ class AuthScreen extends Component {
     }
   }
 
+  onPressFlag = () => {
+    this.countryPicker.openModal()
+  }
+
+  selectCountry = country => {
+    this.phone.selectCountry(country.cca2.toLowerCase())
+    this.setState({ cca2: country.cca2 })
+  }
+
+  onChangePhoneNumber = () => {
+    this.setState({ phone: this.formatPhone(this.phone.getValue()) })
+  }
+
   renderPhoneNameOrCode = () => {
+    return <EnterCode />
     if (this.state.showName) {
       return (
         <View>
@@ -197,12 +207,30 @@ class AuthScreen extends Component {
       return (
         <View>
           <View style={{ marginBottom: 10 }}>
-            <Input
-              placeholder="Enter your phone number"
-              value={this.state.phone}
-              onChangeText={phone => this.setState({ phone })}
-              keyboardType="number-pad"
+            <PhoneInput
+              ref={ref => {
+                this.phone = ref
+              }}
+              onPressFlag={this.onPressFlag}
+              onChangePhoneNumber={this.onChangePhoneNumber}
+              autoFormat
             />
+
+            <CountryPicker
+              ref={ref => {
+                this.countryPicker = ref
+              }}
+              onChange={value => this.selectCountry(value)}
+              translation="eng"
+              cca2={this.state.cca2}
+              closeable
+              filterable
+              showCallingCode
+              filterPlaceholder="Search"
+              animationType="slide"
+            >
+              <View />
+            </CountryPicker>
           </View>
           <Button title="Submit" onPress={this.handleSubmit} />
         </View>
@@ -211,7 +239,7 @@ class AuthScreen extends Component {
 
     return (
       <View>
-        <View style={{ marginBottom: 10 }}>
+        {/* <View style={{ marginBottom: 10 }}>
           <Input
             maxLength={4}
             placeholder="Enter code"
@@ -221,7 +249,8 @@ class AuthScreen extends Component {
           />
         </View>
 
-        <Button title="Submit" onPress={this.signIn} />
+        <Button title="Submit" onPress={this.signIn} /> */}
+        <EnterCode />
       </View>
     )
   }

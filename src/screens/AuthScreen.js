@@ -16,6 +16,7 @@ import { registerForPushNotificationsAsync } from '../services/push_notification
 import { phoneUtil } from '../services/phone_validation'
 import CountryPicker from 'react-native-country-picker-modal'
 import EnterCode from '../components/EnterCode'
+import EnterPhone from '../components/EnterPhone'
 
 const ROOT_URL =
   'https://us-central1-one-time-password-698fc.cloudfunctions.net'
@@ -46,16 +47,11 @@ class AuthScreen extends Component {
     this.setState({ fail: false })
   }
 
-  handleSubmit = async () => {
-    console.log(this.formatPhone(this.phone.getValue()))
-    if (this.phone.isValidNumber()) {
-      this.checkIfUserIdExists(this.formatPhone(this.phone.getValue()))
-      // this.setState({ phoneEntered: true, phone: number });
-    } else {
-      this.setState({
-        message: 'Phone number not valid.  Please try again.'
-      })
-    }
+  handleSubmit = async input => {
+    const phone = this.formatPhone(input)
+    console.log(phone)
+    this.setState({ phone })
+    this.checkIfUserIdExists(this.formatPhone(phone))
   }
 
   formatPhone = phone => {
@@ -138,8 +134,8 @@ class AuthScreen extends Component {
   //   await axios.post(`${ROOT_URL}/requestOneTimePassword`, { phone });
   // }
 
-  signIn = async () => {
-    const { phone, code } = this.state
+  signIn = async code => {
+    const { phone } = this.state
     const { myPoos, myFriends, notificationToken } = this.props
     this.setState({ showSpinner: true })
 
@@ -186,7 +182,6 @@ class AuthScreen extends Component {
   }
 
   renderPhoneNameOrCode = () => {
-    return <EnterCode />
     if (this.state.showName) {
       return (
         <View>
@@ -207,52 +202,13 @@ class AuthScreen extends Component {
       return (
         <View>
           <View style={{ marginBottom: 10 }}>
-            <PhoneInput
-              ref={ref => {
-                this.phone = ref
-              }}
-              onPressFlag={this.onPressFlag}
-              onChangePhoneNumber={this.onChangePhoneNumber}
-              autoFormat
-            />
-
-            <CountryPicker
-              ref={ref => {
-                this.countryPicker = ref
-              }}
-              onChange={value => this.selectCountry(value)}
-              translation="eng"
-              cca2={this.state.cca2}
-              closeable
-              filterable
-              showCallingCode
-              filterPlaceholder="Search"
-              animationType="slide"
-            >
-              <View />
-            </CountryPicker>
+            <EnterPhone handleSubmit={phone => this.handleSubmit(phone)} />
           </View>
-          <Button title="Submit" onPress={this.handleSubmit} />
         </View>
       )
     }
 
-    return (
-      <View>
-        {/* <View style={{ marginBottom: 10 }}>
-          <Input
-            maxLength={4}
-            placeholder="Enter code"
-            value={this.state.code}
-            onChangeText={code => this.setState({ code })}
-            keyboardType="number-pad"
-          />
-        </View>
-
-        <Button title="Submit" onPress={this.signIn} /> */}
-        <EnterCode />
-      </View>
-    )
+    return <EnterCode codeLength={4} codeComplete={code => this.signIn(code)} />
   }
 
   renderSpinner = () => {

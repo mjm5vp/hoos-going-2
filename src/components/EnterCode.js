@@ -1,74 +1,94 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { Input } from 'react-native-elements'
+import { Input, Text } from 'react-native-elements'
 
 export default class EnterCode extends Component {
   state = {
-    code: []
+    code: '',
+    formattedCode: []
   }
 
-  updateCode = (text, place) => {
-    if (text) {
-      const refName = `code${place + 1}`
-      this[refName].focus()
-    } else {
-      const refName = `code${place - 1}`
-      this[refName].focus()
+  componentDidMount() {
+    const formattedCode = [...Array(this.props.codeLength)].map((_, i) => '-')
+    this.setState({ formattedCode })
+  }
+
+  updateCode = code => {
+    const formattedCode = this.formatCode(code)
+    this.setState({ code, formattedCode }, () => {
+      this.checkIfCodeComplete(code)
+    })
+  }
+
+  formatCode = text => {
+    const arr = text.split('')
+
+    return this.state.formattedCode.map((c, i) => {
+      return arr[i] ? arr[i] : '-'
+    })
+  }
+
+  renderFormattedCode = () => {
+    return this.state.formattedCode.map((num, i) => {
+      return (
+        <View style={styles.codeBoxView}>
+          <Text style={styles.codeNumberText}>{num}</Text>
+        </View>
+      )
+    })
+  }
+
+  checkIfCodeComplete = code => {
+    console.log(code)
+    if (code.length === this.props.codeLength) {
+      this.props.codeComplete(code)
     }
   }
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
+        <View style={styles.codeContainer}>{this.renderFormattedCode()}</View>
         <Input
-          onChangeText={text => this.updateCode(text, 0)}
-          value={this.state.code[0]}
-          keyboardType="number-pad"
-          caretHidden={true}
-          placeholder="-"
-          maxLength={1}
-          ref={ref => {
-            this.code0 = ref
-          }}
+          value={this.state.code}
+          ref={this.inputRef}
+          onChangeText={code => this.updateCode(code)}
+          //   onKeyPress={this._keyPress}
+          //   onFocus={() => this._onFocused(true)}
+          //   onBlur={() => this._onFocused(false)}
+          spellCheck={false}
           autoFocus
-        />
-
-        <Input
-          onChangeText={text => this.updateCode(text, 1)}
-          value={this.state.code[1]}
           keyboardType="number-pad"
-          caretHidden={true}
-          placeholder="-"
-          maxLength={1}
-          ref={ref => {
-            this.code1 = ref
-          }}
-        />
-
-        <Input
-          onChangeText={text => this.updateCode(text, 2)}
-          value={this.state.code[2]}
-          keyboardType="number-pad"
-          caretHidden={true}
-          placeholder="-"
-          maxLength={1}
-          ref={ref => {
-            this.code2 = ref
-          }}
-        />
-
-        <Input
-          onChangeText={text => this.updateCode(text, 3)}
-          value={this.state.code[3]}
-          keyboardType="number-pad"
-          caretHidden={true}
-          placeholder="-"
-          maxLength={1}
-          ref={ref => {
-            this.code3 = ref
+          numberOfLines={1}
+          maxLength={4}
+          //   selection={{
+          //     start: value.length,
+          //     end: value.length
+          //   }}
+          containerStyle={{
+            flex: 1,
+            opacity: 0,
+            width: 20
           }}
         />
       </View>
     )
+  }
+}
+
+const styles = {
+  container: {
+    alignItems: 'center'
+  },
+  codeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '50%'
+  },
+  codeBoxView: {
+    flex: 1
+  },
+  codeNumberText: {
+    fontSize: 50
   }
 }

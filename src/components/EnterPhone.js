@@ -16,18 +16,16 @@ export default class EnterPhone extends Component {
     errorMessage: ''
   }
 
-  updatePhone = input => {
-    const { cca2, callingCode } = this.state
-    const phone = `${callingCode}${input}`
-    const formattedPhone = formatPartialByCountry(input.split(''), cca2)
+  updatePhone = phone => {
+    const { cca2 } = this.state
+    const formattedPhone = formatPartialByCountry(phone.split(''), cca2)
     this.setState({ phone, formattedPhone })
   }
 
   renderFormattedPhone = () => {
-    const input =
-      this.state.phone && this.isTenDigitNumber()
-        ? this.state.formattedPhone
-        : '(202) 555-7667'
+    const input = this.state.phone
+      ? this.state.formattedPhone
+      : '(202) 555-7667'
 
     const style = this.state.phone
       ? styles.formatedPhoneText
@@ -41,12 +39,25 @@ export default class EnterPhone extends Component {
   }
 
   submitPhone = () => {
-    const { phone, cca2 } = this.state
-    if (isValidNumber(phone, cca2)) {
-      this.props.handleSubmit(phone)
+    const { callingCode, phone, cca2 } = this.state
+    const fullPhone = `${callingCode}${phone}`
+    if (isValidNumber(fullPhone, cca2)) {
+      this.props.handleSubmit(fullPhone)
     } else {
       this.setState({ errorMessage: 'Please enter a valid number.' })
     }
+  }
+
+  onChangeCountry = value => {
+    const { cca2, callingCode } = value
+    this.setState({
+      cca2,
+      callingCode,
+      phone: '',
+      formattedPhone: '',
+      errorMessage: ''
+    })
+    this.inputRef.focus()
   }
 
   isTenDigitNumber = () => {
@@ -60,15 +71,7 @@ export default class EnterPhone extends Component {
         <View style={styles.countryPickerContainer}>
           <View style={styles.countryPickerView}>
             <CountryPicker
-              onChange={value => {
-                const { cca2, callingCode } = value
-                this.setState({
-                  cca2,
-                  callingCode,
-                  phone: ''
-                })
-                this.inputRef.focus()
-              }}
+              onChange={value => this.onChangeCountry(value)}
               ref={ref => {
                 this.countryPicker = ref
               }}
@@ -111,7 +114,7 @@ export default class EnterPhone extends Component {
         </View>
 
         <Input
-          value={this.state.code}
+          value={this.state.phone}
           ref={ref => {
             this.inputRef = ref
           }}
@@ -120,7 +123,9 @@ export default class EnterPhone extends Component {
           autoFocus
           keyboardType="number-pad"
           numberOfLines={1}
-          maxLength={this.isTenDigitNumber ? 10 : null}
+          maxLength={
+            this.isTenDigitNumber() ? 10 : 15 - this.state.callingCode.length
+          }
           containerStyle={{
             flex: 1,
             opacity: 0,
@@ -147,7 +152,8 @@ const styles = {
     borderRadius: 5,
     marginTop: 20,
     marginBottom: 20,
-    height: 50
+    height: 50,
+    overflow: 'scroll'
   },
   countryPickerView: {
     marginLeft: 10,
@@ -172,6 +178,7 @@ const styles = {
     flexDirection: 'row'
   },
   continueText: {
-    flex: 1
+    flex: 1,
+    paddingRight: 30
   }
 }

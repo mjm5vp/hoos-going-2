@@ -10,7 +10,7 @@ export const AsYouTypeFormatter = require('google-libphonenumber')
 
 // Parse number with country code and keep raw input.
 export const parseNumber = (number, countryCode) => {
-  return phoneUtil.parse(number, countryCode)
+  return phoneUtil.parseAndKeepRawInput(number, countryCode)
 }
 
 // Format number in the national format.

@@ -7,7 +7,7 @@ import {
   ScrollView,
   ImageBackground
 } from 'react-native'
-import { Button, Card, Badge } from 'react-native-elements'
+import { Button, Card, Badge, Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import firebase from 'firebase'
 
@@ -145,15 +145,12 @@ class HomeScreen extends Component {
       )
     }
     return (
-      <Card>
-        <Button
-          title="Sign In"
-          icon={{ name: 'gear', type: 'font-awesome' }}
-          onPress={() => this.props.navigation.navigate('auth')}
-          buttonStyle={styles.mapButton}
-          raised
-        />
-      </Card>
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('auth')}>
+        <View style={styles.iconView}>
+          <Text style={styles.addText}>Log In</Text>
+          <Icon name="arrow-circle-right" type="font-awesome" />
+        </View>
+      </TouchableOpacity>
     )
   }
 
@@ -183,58 +180,57 @@ class HomeScreen extends Component {
             </View>
           </TouchableOpacity>
 
-          <Button
-            title="Map"
-            icon={{ name: 'map', type: 'font-awesome' }}
-            onPress={() => this.navToMap()}
-            buttonStyle={styles.mapButton}
-            raised
-          />
-
-          <Button
-            title="Log"
-            icon={{ name: 'list', type: 'font-awesome' }}
-            onPress={() => this.navToLog()}
-            buttonStyle={styles.mapButton}
-            raised
-          />
-
-          <Button
-            title="Stats"
-            icon={{ name: 'area-chart', type: 'font-awesome' }}
-            onPress={() => this.props.navigation.navigate('stats')}
-            buttonStyle={styles.mapButton}
-            raised
-          />
-
-          <TouchableOpacity onPress={() => this.navToFriends()}>
-            <View style={styles.bigButton}>
-              <View style={{ alignItems: 'flex-end' }}>
-                <Badge
-                  value={this.state.addedMe.length}
-                  containerStyle={{ width: 30 }}
-                />
+          <View style={styles.iconRowView}>
+            <TouchableOpacity onPress={() => this.navToMap()}>
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Map</Text>
+                <Icon name="map" type="font-awesome" />
               </View>
+            </TouchableOpacity>
 
-              <Text>Friends</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.navToLog()}>
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Log</Text>
+                <Icon name="list" type="font-awesome" />
+              </View>
+            </TouchableOpacity>
+          </View>
 
-          <Button
-            title="Sent To Me"
-            // icon={{ name: 'ios-people', type: 'font-awesome' }}
-            onPress={() => this.navToSentToMe()}
-            buttonStyle={styles.mapButton}
-            raised
-          />
+          <View style={styles.iconRowView}>
+            <TouchableOpacity onPress={() => this.navToFriends()}>
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Friends</Text>
+                <Icon name="users" type="font-awesome" />
+              </View>
+            </TouchableOpacity>
 
-          <Button
-            title="Settings"
-            // icon={{ name: 'ios-people', type: 'font-awesome' }}
-            onPress={() => this.props.navigation.navigate('settings')}
-            buttonStyle={styles.mapButton}
-            raised
-          />
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('settings')}
+            >
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Settings</Text>
+                <Icon name="cogs" type="font-awesome" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.iconRowView}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('stats')}
+            >
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Stats</Text>
+                <Icon name="area-chart" type="font-awesome" />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => this.navToSentToMe()}>
+              <View style={styles.iconView}>
+                <Text style={styles.addText}>Inbox</Text>
+                <Icon name="envelope" type="font-awesome" />
+              </View>
+            </TouchableOpacity>
+          </View>
 
           {this.renderAuthButton()}
         </ScrollView>

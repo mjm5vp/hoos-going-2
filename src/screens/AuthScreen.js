@@ -49,7 +49,6 @@ class AuthScreen extends Component {
 
   handleSubmit = async input => {
     const phone = this.formatPhone(input)
-    console.log(phone)
     this.setState({ phone })
     this.checkIfUserIdExists(this.formatPhone(phone))
   }

@@ -160,10 +160,11 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <ImageBackground
-        source={feetBackground}
-        style={styles.backgroundContainer}
-      >
+      // <ImageBackground
+      //   source={feetBackground}
+      //   style={styles.backgroundContainer}
+      // >
+      <View style={{ flex: 1 }}>
         <Text style={styles.headerStyle}>Hoos Going 2</Text>
 
         <ScrollView
@@ -172,26 +173,26 @@ class HomeScreen extends Component {
         >
           <TouchableOpacity onPress={() => this.navToAdd()}>
             <View style={styles.addView}>
-              <Text style={styles.addText}>Take a Poo</Text>
               <Image
                 source={allNamedPoos.sunglasses.image}
                 style={styles.addImage}
               />
+              <Text style={styles.addText}>Take a Poo</Text>
             </View>
           </TouchableOpacity>
 
           <View style={styles.iconRowView}>
             <TouchableOpacity onPress={() => this.navToMap()}>
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Map</Text>
                 <Icon name="map" type="font-awesome" />
+                <Text style={styles.addText}>Map</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => this.navToLog()}>
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Log</Text>
                 <Icon name="list" type="font-awesome" />
+                <Text style={styles.addText}>Log</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -199,8 +200,8 @@ class HomeScreen extends Component {
           <View style={styles.iconRowView}>
             <TouchableOpacity onPress={() => this.navToFriends()}>
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Friends</Text>
                 <Icon name="users" type="font-awesome" />
+                <Text style={styles.addText}>Friends</Text>
               </View>
             </TouchableOpacity>
 
@@ -208,8 +209,8 @@ class HomeScreen extends Component {
               onPress={() => this.props.navigation.navigate('settings')}
             >
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Settings</Text>
                 <Icon name="cogs" type="font-awesome" />
+                <Text style={styles.addText}>Settings</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -219,15 +220,15 @@ class HomeScreen extends Component {
               onPress={() => this.props.navigation.navigate('stats')}
             >
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Stats</Text>
                 <Icon name="area-chart" type="font-awesome" />
+                <Text style={styles.addText}>Stats</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => this.navToSentToMe()}>
               <View style={styles.iconView}>
-                <Text style={styles.addText}>Inbox</Text>
                 <Icon name="envelope" type="font-awesome" />
+                <Text style={styles.addText}>Inbox</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -241,7 +242,8 @@ class HomeScreen extends Component {
           onAccept={this.okModalAccept}
           visible={this.state.okModalVisible}
         />
-      </ImageBackground>
+      </View>
+      // </ImageBackground>
     )
   }
 }

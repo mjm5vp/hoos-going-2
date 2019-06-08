@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import { ContributionGraph } from 'react-native-chart-kit'
+import { BottomShadowView } from './BottomShadowView'
 
 export default class ContributionChart extends Component {
   render() {
     const chartConfig = {
-      backgroundColor: '#e26a00',
-      backgroundGradientFrom: '#fb8c00',
-      backgroundGradientTo: '#ffa726',
-      decimalPlaces: 2, // optional, defaults to 2dp
-      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      style: {
-        borderRadius: 16
-      }
+      backgroundColor: 'brown',
+      backgroundGradientFrom: 'white',
+      backgroundGradientTo: 'white',
+      decimalPlaces: 0, // optional, defaults to 2dp
+      color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+      style: {}
     }
 
     const commitsData = [
@@ -28,15 +27,18 @@ export default class ContributionChart extends Component {
       { date: '2019-02-30', count: 4 }
     ]
     return (
-      <ContributionGraph
-        values={commitsData}
-        endDate={new Date()}
-        numDays={500}
-        // width={screenWidth}
-        height={220}
-        chartConfig={chartConfig}
-        overflow="Scroll"
-      />
+      <BottomShadowView>
+        <ContributionGraph
+          values={commitsData}
+          endDate={new Date()}
+          numDays={100}
+          // width={screenWidth}
+          height={220}
+          chartConfig={chartConfig}
+          backgroundColor="transparent"
+          style={{}}
+        />
+      </BottomShadowView>
     )
   }
 }

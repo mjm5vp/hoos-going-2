@@ -161,17 +161,17 @@ class FriendsScreen extends Component {
     const { name, number } = this.props.myInfo
     const { notificationToken } = this.props
 
-    console.log(phoneUtil.isValidNumber(parseNumber(this.state.addNumberNew)))
+    // console.log(phoneUtil.isValidNumber(parseNumber(this.state.addNumberNew)))
 
-    // this.setState({ addFriendByNumberModalVisible: false })
+    this.setState({ addFriendByNumberModalVisible: false })
 
-    // this.props.acceptFriend({
-    //   name: this.state.addNameNew,
-    //   number: this.state.addNumberNew,
-    //   myName: name,
-    //   myNumber: number,
-    //   notificationToken
-    // })
+    this.props.acceptFriend({
+      name: this.state.addNameNew,
+      number: this.state.addNumberNew,
+      myName: name,
+      myNumber: number,
+      notificationToken
+    })
   }
 
   changeName = addNameNew => {

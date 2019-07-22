@@ -45,12 +45,12 @@ class MapSelectScreen extends Component {
     // const height = Dimensions.get('window').height;
     // const width = Dimensions.get('window').width;
 
-    this.setState({ mapLoaded: true, mapType })
     if (this.props.location.latitude) {
       this.setRegionToCoordinate()
     } else {
       this.getLocationAsync()
     }
+    this.setState({ mapLoaded: true, mapType })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,7 +78,7 @@ class MapSelectScreen extends Component {
     const { longitude, latitude } = this.props.location
 
     this.setState({
-      region: {
+      initialRegion: {
         longitude,
         latitude,
         latitudeDelta: 0.005,
@@ -93,7 +93,7 @@ class MapSelectScreen extends Component {
       this.setState({
         errorMessage: 'Permission to access location was denied',
         showLocationButton: false,
-        region: {
+        initialRegion: {
           latitude: 30,
           longitude: -95,
           latitudeDelta: 50,
@@ -108,7 +108,7 @@ class MapSelectScreen extends Component {
       this.setState({
         showLocationButton: true,
         location,
-        region: {
+        initialRegion: {
           latitude,
           longitude,
           latitudeDelta: 0.005,
@@ -223,9 +223,9 @@ class MapSelectScreen extends Component {
           provider={PROVIDER_GOOGLE}
           style={styles.mapViewStyle}
           mapType={this.state.mapType}
-          // initialRegion={this.state.initialRegion}
-          region={this.state.region}
-          onRegionChangeComplete={this.onRegionChange}
+          initialRegion={this.state.initialRegion}
+          // region={this.state.region}
+          onRegionChangeComplete={region => this.onRegionChange(region)}
           showsUserLocation
           // showsMyLocationButton={this.state.showLocationButton}
           showsMyLocationButton

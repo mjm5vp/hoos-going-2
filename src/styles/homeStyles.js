@@ -20,6 +20,7 @@ const styles = {
     marginBottom: 10,
     fontSize: 60,
     fontWeight: '900',
+    textAlign: 'center',
     // fontFamily: 'Bradley Hand',
     color: 'orange',
     backgroundColor: 'rgba(0,0,0,0)'

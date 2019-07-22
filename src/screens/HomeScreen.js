@@ -138,10 +138,12 @@ class HomeScreen extends Component {
     // console.log(currentUser);
     if (this.state.currentUser || currentUser) {
       return (
-        <Card>
-          <Text>You're signed In</Text>
-          <Button title="Sign Out" onPress={() => this.authLogout()} />
-        </Card>
+        <TouchableOpacity onPress={() => this.authLogout()}>
+          <View style={styles.iconView}>
+            <Text style={styles.addText}>Log Out</Text>
+            <Icon name="arrow-circle-right" type="font-awesome" />
+          </View>
+        </TouchableOpacity>
       )
     }
     return (
@@ -160,11 +162,11 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      // <ImageBackground
-      //   source={feetBackground}
-      //   style={styles.backgroundContainer}
-      // >
-      <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={feetBackground}
+        style={styles.backgroundContainer}
+      >
+        {/* <View style={{ flex: 1 }}> */}
         <Text style={styles.headerStyle}>Hoos Going 2</Text>
 
         <ScrollView
@@ -242,8 +244,8 @@ class HomeScreen extends Component {
           onAccept={this.okModalAccept}
           visible={this.state.okModalVisible}
         />
-      </View>
-      // </ImageBackground>
+        {/* </View> */}
+      </ImageBackground>
     )
   }
 }

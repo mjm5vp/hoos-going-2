@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Image, TouchableOpacity } from 'react-native'
+import {
+  ScrollView,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { selectPoo } from '../actions'
@@ -26,7 +32,7 @@ class PooSelect extends Component {
           key={i}
           onPress={() => this.onPressButton(name)}
         >
-          <Image source={image} />
+          <Image style={styles.image} source={image} />
         </TouchableOpacity>
       )
     })
@@ -41,11 +47,16 @@ class PooSelect extends Component {
   }
 }
 
+const SCREEN_WIDTH = Dimensions.get('window').width
+
 const styles = {
   buttonStyle: {},
   viewStyle: {
     flexDirection: 'row',
     flexWrap: 'wrap'
+  },
+  image: {
+    width: SCREEN_WIDTH / 5
   }
 }
 

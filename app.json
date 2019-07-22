@@ -9,7 +9,7 @@
     "orientation": "portrait",
     "icon": "./assets/pooImages/teeth.png",
     "splash": {
-      "image": "./assets/backgrounds/feet_background.jpg",
+      "image": "./assets/backgrounds/feet_background.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

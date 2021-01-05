@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "alpha-scroll-flat-list": "^0.2.20",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "d3-scale": "^3.0.0",
     "expo": "^32.0.0",
     "firebase": "^5.9.1",
